@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <title>Vinted Listing Description Generator</title>
+
+    <style>
+        body {
+            background-color: #Fff;
+        }
+        header {
+            padding: 20px;
+            text-align: center;  /* This centers the image horizontally */
+        }
+
+        .header-gif {
+            max-width: 100%; /* Make sure the image is responsive */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+
+    <script>
+        // Copy text to clipboard
+        function copyToClipboard() {
+            const copyDescription = document.getElementById("generated_description");
+            copyDescription.select();
+            document.execCommand("copy");
+        }
+
+        // Check & fill target language checkboxes 
+        function checkTargetLanguages() {
+            const target_languages = JSON.parse('{{ target_languages | tojson }}');
+            target_languages.forEach(language => {
+                const checkbox = document.getElementById(language);
+                if (checkbox) {
+                    checkbox.checked = true;  // Check the checkbox if the language is in the list
+                }
+            });
+        }
+
+        window.onload = checkTargetLanguages;
+    </script>
+</head>
+
+<body>
+
+    <header>
+        <img src="static/title.gif" alt="Vinted Description Enhancer" class="header-gif">
+    </header>
+
+    <div class="container">
+
+        <form method="POST">
+            <div class="row">
+                <!-- Input -->
+                <div class="col">
+
+                    <label for="input_description">Description:</label>
+                    <br><textarea id="input_description" name="input_description" rows=10 required>{{ input_description }}</textarea>
+                    <br><br>
+                    
+                    <label for="input_tags">Tags:</label><br>
+                    <input type="text" id="input_tags" name="input_tags" value="{{ input_tags }}"><br><br>
+
+                    <label for="input_language">Original description is written in:</label><br>
+                    <select id="input_language" name="input_language">
+                        <option value="en">English</option>
+                        <option value="nl">Dutch</option>
+                        <option value="fr">French</option>
+                        <option value="es">Spanish</option>
+                        <option value="it">Italian</option>
+                        <option value="de">German</option>
+                    </select><br><br>
+
+                    <label>Description should include translations of:</label><br>
+                    <input type="checkbox" name="target_languages" id="en" value="en"> English<br>
+                    <input type="checkbox" name="target_languages" id="nl" value="nl"> Dutch<br>
+                    <input type="checkbox" name="target_languages" id="fr" value="fr"> French<br>
+                    <input type="checkbox" name="target_languages" id="es" value="es"> Spanish<br>
+                    <input type="checkbox" name="target_languages" id="it" value="it"> Italian<br>
+                    <input type="checkbox" name="target_languages" id="de" value="de"> German<br>
+
+                    <br>
+                    <input type="submit" value="Generate">
+
+                </div>
+                
+                <!-- Output -->
+                <div class="col">
+
+                    <label for="generated_description">Generated description:</label><br>
+                    <textarea id="generated_description" name="generated_description" rows=20 readonly>{{ generated_description }}</textarea>
+                    <br><br>
+                    <br>
+                    <button type="button" onclick="copyToClipboard()">Copy</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</body>
+
+</html>
