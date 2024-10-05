@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request
+import threading
+from waitress import serve
+import webbrowser
 from AutomaticTranslation import GenerateDescription
 
 app = Flask(__name__)
@@ -24,14 +27,16 @@ def translate():
             target_languages = target_languages,
             generated_description = generated_description
         )
-        
-        
+
     return render_template(
         "index.html",
         target_languages = ["en", "nl", "fr", "es", "it", "de"],
         input_description = "Write your description here..."
     )
 
+def open_browser():
+    webbrowser.open_new("http://127.0.0.1:5000/")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    threading.Timer(1, open_browser).start() 
+    app.run()
